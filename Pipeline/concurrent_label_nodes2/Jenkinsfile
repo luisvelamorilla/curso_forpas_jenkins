@@ -1,0 +1,69 @@
+import jenkins.model.*
+
+collectBuildEnv = [:]
+
+@NonCPS
+def getNodes(String label) {
+    jenkins.model.Jenkins.instance.nodes.collect { thisAgent ->
+        if (thisAgent.labelString.contains("${label}")) {
+            return thisAgent.name
+        }
+    }
+}
+
+
+/*
+    La función dumpBuildEnv es una función que se utiliza para crear un bloque en el Jenkinsfile que ejecutará un conjunto de pasos en un agente específico. 
+    Aquí está el desglose de lo que hace:
+    1 La función dumpBuildEnv toma un parámetro agentName, que representa el nombre del agente en el cual se ejecutarán los pasos.
+    2 Dentro de la función, se utiliza la directiva node("${agentName}") para asignar y limitar la ejecución de los pasos al agente especificado por el nombre agentName. Esto significa que los pasos definidos dentro del bloque node se ejecutarán en ese agente en particular.
+    3 Dentro del bloque node, se define una etapa (stage) llamada "Env in ${agentName}" que proporciona un contexto descriptivo para los pasos que se van a ejecutar en ese agente.
+    4 Dentro de la etapa, se utiliza el comando echo para imprimir un mensaje en la consola de Jenkins indicando que se está ejecutando en el agente especificado. El mensaje contiene el nombre del agente en la variable ${agentName}.
+    5 Hay un comentario en el código (// sh 'printenv') que está actualmente deshabilitado. Si se descomenta esa línea, se ejecutará el comando printenv, que mostrará las variables de entorno del agente en la consola de Jenkins.
+*/
+def dumpBuildEnv(String agentName) {
+    node("${agentName}") {
+        stage("Env in ${agentName}") {
+            echo "running on agent, ${agentName}"
+            // sh 'printenv'
+        }
+    }
+}
+
+def processTask() {
+    // Replace label-string with the label name that you may have
+    def nodeList = getNodes("linux")
+    
+    for(i=0; i<nodeList.size(); i++) {
+        def agentName = nodeList[i]
+        
+        // skip the null entries in the nodeList
+        if (agentName != null) {
+            println "Preparing task for " + agentName
+            collectBuildEnv["node_" + agentName] = {
+                dumpBuildEnv(agentName)
+            }
+        }
+    }
+}
+
+pipeline {
+    // I prefer to have a dedicated node to execute admin tasks
+    agent {
+        label "cliente2"
+    }
+
+        
+    stages {
+        stage('agents-tasks') {
+            
+            steps {
+                script {
+                    processTask()
+      
+                    parallel collectBuildEnv
+                }
+            }
+        }
+    }
+}

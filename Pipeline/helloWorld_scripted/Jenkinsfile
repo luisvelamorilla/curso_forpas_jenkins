@@ -1,0 +1,14 @@
+// Jenkinsfile scripted pipeline
+node('cliente1') {
+    stage('stage 1') { 
+        echo "HelloWorld from stage 1"
+    }
+    stage('stage 2') {
+        echo "HelloWorld from stage 2"
+        sleep 10
+        sh 'mkdir TEST'
+    }
+    stage('stage 3') {
+        echo "HelloWorld from stage 3"
+    }
+}

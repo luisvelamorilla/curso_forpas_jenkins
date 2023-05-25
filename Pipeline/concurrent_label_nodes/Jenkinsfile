@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Imprimir agentes con etiqueta') {
+            steps {
+                script {
+                    def label = 'linux'
+                    def nodes = Jenkins.instance.nodes.findAll { node -> node.getLabelString().contains(label) }
+
+                    nodes.each { node ->
+                        echo "Agente con etiqueta '${label}': ${node.getDisplayName()}"
+                        echo "Direccion IP: ${node.computer.hostName}"
+                    }
+                }
+            }
+        }
+    }
+}

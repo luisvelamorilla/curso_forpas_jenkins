@@ -1,0 +1,43 @@
+pipeline {
+    
+    agent none
+    
+    stages {
+        stage('Inputs') {
+            agent { 
+                label 'linux'
+            }
+            steps {
+                script {  
+                        // Valores para la elección
+                        def webServerChoices = ['apache2', 'nginx']
+                        def actionChoices = ['install', 'remove']      
+
+                        // Elección de parámetros
+                        def userInput = input(message: "Qué quieres hacer en este nodo ${env.NODE_NAME}:", parameters: [
+                            choice(choices: webServerChoices, description: 'Seleccione un servidor web:', name: 'webServer'),
+                            choice(choices: actionChoices, description: 'Seleccione una acción:', name: 'action')
+                        ])
+                    
+                        // Definir variables de entorno con los valores de los parámetros
+                        env.WEB_SERVER = userInput.webServer
+                        env.ACTION = userInput.action
+                        
+                        // Acceder a los valores de los parámetros desde las variables de entorno
+                        println "Vamos a ${env.ACTION} el servidor web ${env.WEB_SERVER} en el nodo ${env.NODE_NAME}"
+                        sh 'hostname'
+                        sh 'ip a'
+
+                        // Ejecutar comandos en el nodo
+                        sh """
+                            sudo apt ${env.ACTION} ${env.WEB_SERVER} -y
+                            if [ ${env.ACTION} = "remove" ]; then
+                                sudo apt autoremove -y
+                                sudo apt purge
+                            fi
+                        """
+                }
+            }
+        }
+    }
+}

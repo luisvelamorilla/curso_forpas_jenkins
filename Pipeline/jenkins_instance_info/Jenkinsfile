@@ -1,0 +1,72 @@
+// https://javadoc.jenkins.io/jenkins/model/Jenkins.html
+
+pipeline {
+
+    agent any
+    /*
+    agent {
+        label 'cliente1'
+    }
+    */
+    
+    stages {
+        stage('Stage init') {
+            steps {
+                println "Hello from stage init"
+            }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                def jenkins = Jenkins.instance
+
+                println "Versión de Jenkins: " + jenkins.getVersion()
+                println "URL base de Jenkins: " + jenkins.getRootUrl()
+                println "Directorio de trabajo de Jenkins: " + jenkins.getRootDir()
+                println "Número total de ejecutores: " + jenkins.getNumExecutors()
+                println "Cantidad máxima de ejecutores: " + jenkins.getNodes().size()
+                println "Modo de seguridad: " + jenkins.getSecurityRealm().getDisplayName()
+                println "Número de jobs activos: " + jenkins.getAllItems().size()
+                println "Número de plugins instalados: " + jenkins.getPluginManager().getPlugins().size()
+                println "Estado de Jenkins: " + jenkins.isQuietingDown()
+                println "Número de nodos en ejecución: " + jenkins.getComputers().size()
+                println "Número de jobs en la cola: " + jenkins.getQueue().getItems().size()
+                println "Versión de Java en uso: " + System.getProperty("java.version")
+                println "Sistema operativo en el que se ejecuta Jenkins: " + System.getProperty("os.name")
+            }
+        }
+    }
+}
+
+/*
+
+http://jenkins:8080/scriptApproval/
+
+Signatures already approved:
+
+method hudson.PluginManager getPlugins
+method hudson.model.AbstractCIBase getNodes
+method hudson.model.AbstractCIBase getQueue
+method hudson.model.ItemGroup getAllItems
+method hudson.model.Node getNumExecutors
+method hudson.model.PersistenceRoot getRootDir
+method hudson.model.Queue getItems
+method jenkins.model.Jenkins getComputers
+method jenkins.model.Jenkins getPluginManager
+method jenkins.model.Jenkins getRootUrl
+method jenkins.model.Jenkins getSecurityRealm
+method jenkins.model.Jenkins isQuietingDown
+staticMethod java.lang.System getProperty java.lang.String
+staticMethod jenkins.model.Jenkins getInstance
+staticMethod jenkins.model.Jenkins getVersion
+
+
+
+Signatures already approved which may have introduced a security vulnerability (recommend clearing):
+
+staticMethod java.lang.System getProperty java.lang.String
+staticMethod jenkins.model.Jenkins getInstance
+
+*/
