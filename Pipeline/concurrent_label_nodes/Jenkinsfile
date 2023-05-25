@@ -5,7 +5,7 @@ pipeline {
         stage('Imprimir agentes con etiqueta') {
             steps {
                 script {
-                    def label = 'linux'
+                    def label = 'clientes'
                     def nodes = Jenkins.instance.nodes.findAll { node -> node.getLabelString().contains(label) }
 
                     nodes.each { node ->
