@@ -15,7 +15,7 @@ def dumpBuildEnv(String agentName) {
     node("${agentName}") {
         stage("Env in ${agentName}") {
             echo "running on agent, ${agentName}"
-            // sh 'printenv'
+            sh 'sleep 10'
         }
     }
 }
