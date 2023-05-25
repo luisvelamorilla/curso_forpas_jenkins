@@ -21,13 +21,11 @@ def dumpBuildEnv(String agentName) {
 }
 
 def processTask() {
-    // Replace label-string with the label name that you may have
     def nodeList = getNodes("linux")
     
     for(i=0; i<nodeList.size(); i++) {
         def agentName = nodeList[i]
         
-        // skip the null entries in the nodeList
         if (agentName != null) {
             println "Preparing task for " + agentName
             collectBuildEnv["node_" + agentName] = {
@@ -38,7 +36,7 @@ def processTask() {
 }
 
 pipeline {
-    // I prefer to have a dedicated node to execute admin tasks
+    // dedicated node to execute this admin tasks
     agent {
         label "cliente2"
     }
