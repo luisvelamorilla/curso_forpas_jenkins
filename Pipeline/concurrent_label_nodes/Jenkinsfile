@@ -1,21 +1,35 @@
 pipeline {
-    agent any
     
+    agent any
+
     stages {
-        stage('Imprimir agentes con etiqueta') {
+        stage('Stage1') {
             steps {
                 script {
                     currentBuild.displayName = "#${BUILD_NUMBER} - ${JOB_NAME} - ${NODE_NAME}"
-                                     
-                    def label = 'linux'
-                    def nodes = Jenkins.instance.nodes.findAll { node -> node.getLabelString().contains(label) }
-
-                    nodes.each { node ->
-                        echo "Agente con etiqueta '${label}': ${node.getDisplayName()}"
-                        echo "Direccion IP: ${node.computer.hostName}"
-                    }
+                    parallelTasks()
                 }
             }
         }
     }
+}
+
+def parallelTasks() {
+    def labels = ['linux'] // labels for Jenkins node types we will build on
+    def builders = [:]
+    for (x in labels) {
+        def label = x // Need to bind the label variable before the closure - can't do 'for (label in labels)'
+
+        // Create a map to pass in to the 'parallel' step so we can fire all the builds at once
+        builders[label] = {
+            node(label) {
+                sh '''
+                sleep 10
+                echo "hostname:`hostname`"
+                echo "whoami:`whoami`"
+                '''
+            }
+        }
+    }
+    parallel builders
 }
