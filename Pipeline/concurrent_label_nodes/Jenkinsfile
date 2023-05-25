@@ -13,7 +13,7 @@ pipeline {
                     nodes.each { node ->
                         echo "Agente con etiqueta '${label}': ${node.getDisplayName()}"
                         echo "Direccion IP: ${node.computer.hostName}"
-                        mkdir /home/ubuntu/TEST_concurrent_label_nodes
+                        sh 'mkdir /home/ubuntu/TEST_concurrent_label_nodes'
                     }
                 }
             }
