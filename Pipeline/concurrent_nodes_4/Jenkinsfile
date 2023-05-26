@@ -7,6 +7,7 @@ def generateStage(nodeLabel) {
             node(nodeLabel) {
                 echo "Running on ${nodeLabel}"
                 sh 'sleep 10'
+                echo "Bye bye"
             }
         }
     }
