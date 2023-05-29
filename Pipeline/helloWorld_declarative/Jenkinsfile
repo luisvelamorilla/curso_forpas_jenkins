@@ -27,6 +27,7 @@ pipeline {
             agent { label 'linux' }
             steps {
                 sh '''
+                chmod +x ./Freestyle/hostname.sh
                 ./Freestyle/hostname.sh
                 '''
                 echo "HelloWorld from stage 4"
