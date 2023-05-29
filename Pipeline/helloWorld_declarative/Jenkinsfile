@@ -26,8 +26,8 @@ pipeline {
         stage('Stage 4: call script') {
             agent { label 'linux' }
             steps {
-                powershell '''
-                ./Freestyle/hostname.ps1
+                sh '''
+                ./Freestyle/hostname.sh
                 '''
                 echo "HelloWorld from stage 4"
             }
