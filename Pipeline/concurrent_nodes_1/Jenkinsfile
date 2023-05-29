@@ -13,15 +13,18 @@ pipeline {
     }
 }
 
+
 def parallelTasks() {
-    def labels = ['cliente1', 'cliente2'] // labels for Jenkins node types we will build on
+    def labels = ['cliente1', 'cliente2'] 
     def builders = [:]
     for (x in labels) {
-        def label = x // Need to bind the label variable before the closure - can't do 'for (label in labels)'
+        // Bind the label variable before the closure - (label in labels) = ERROR'
+        def label = x 
 
-        // Create a map to pass in to the 'parallel' step so we can fire all the builds at once
+        // Create a map to pass-in to the 'parallel' step so we can fire all the builds at once
         builders[label] = {
             node(label) {
+                currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
                 sh '''
                 echo "hostname:`hostname`"
                 echo "whoami:`whoami`"

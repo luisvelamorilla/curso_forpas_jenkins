@@ -22,7 +22,17 @@ pipeline {
                 sh "hostname"
                 echo "HelloWorld from stage 3"
             }
-        }        
+        }    
+        stage('Stage 4: call script') {
+            agent { label 'linux' }
+            steps {
+                powershell '''
+                ./Freestyle/hostname.ps1
+                '''
+                echo "HelloWorld from stage 4"
+            }
+        }  
+
     }
 }
 

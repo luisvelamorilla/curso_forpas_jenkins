@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'helloWorld', defaultValue: 'Hola Mundo')
+    }
+
+    stages {
+        stage('Powershell') {
+            steps {
+                script {
+                    powershell '''
+                    Write-Host "${env:helloWorld} desde PowerShell"
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo "Powershell script se ejecutó correctamente"
+                }                
+                failure {
+                    echo "Hubo algún error en la ejecución de PowerShell"
+                }
+            }            
+        }
+        stage('Shell script') {
+            steps {
+                script {
+                    sh '''
+                    echo "${helloWorld} desde Shell Script"
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo "Shell script se ejecutó correctamente"
+                }
+                failure {
+                    echo "Hubo algún error en la ejecución del Shell script"
+                }
+            }                        
+        }
+        stage('Python') {
+            steps {
+                script {
+                    sh '''
+                    python -c "print('Hola ' + helloWorld + ' desde Python')"
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo "Python script se ejecutó correctamente"
+                }
+                failure {
+                    echo "Hubo algún error en la ejecución del script en Python"
+                }
+            }                 
+        }      
+        stage('Bash script Windows') {
+            steps {
+                script {
+                    bat '''
+                    echo %helloWorld%
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo "Bash script Windows se ejecutó correctamente"
+                }
+                failure {
+                    echo "Hubo algún error en la ejecución del Bash script Windows"
+                }
+            }                 
+        }                      
+    }
+    post {
+        success {
+            echo "Todo se ejecutó correctamente"
+        }
+        failure {
+            echo "Hubo algún error"
+        }        
+    }     
+}
