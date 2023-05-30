@@ -1,6 +1,11 @@
 pipeline {
 
-    agent any
+    // agent any
+    
+    // dedicated node to execute this admin tasks
+    agent {
+        label "cliente2"
+    }    
 
     stages {
         stage('Stage1') {
