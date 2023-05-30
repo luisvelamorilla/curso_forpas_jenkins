@@ -20,7 +20,7 @@ pipeline {
 
 
 def parallelTasks() {
-    def labels = ['linux'] 
+    def labels = ['cliente1', 'cliente2'] 
     def builders = [:]
     for (x in labels) {
         // Bind the label variable before the closure - (label in labels) = ERROR'
