@@ -1,0 +1,49 @@
+pipeline {
+    
+    agent cliente3
+    
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+    
+    stages {
+        stage('Preparación') {
+            currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+            options {
+                timeout(time: 10, unit: 'MINUTES')
+            }
+            def PROGRAM = params.PROGRAM
+            def OPTIONS = params.OPTIONS
+        }
+        
+        stage('Instalación') {
+            steps {
+                script {
+                    def result = powershell '''
+                        $result = choco install ${PROGRAM} ${OPTIONS} -y
+                    ''' 
+                    echo "El resultado es: ${result}"
+                }
+            }
+        }
+        
+        stage('Verificación') {
+            steps {
+                script {
+                    def INSTALLED = powershell(
+                        script: "choco list --localonly | Select-String -Pattern ${PROGRAM}",
+                        returnStdout: true
+                    ).trim()
+
+                    echo "El programa instalado es: ${INSTALLED}"
+                    
+                    if (INSTALLED == 0) {
+                        echo "El programa $programa se ha instalado correctamente."
+                    } else {
+                        error("El programa $programa no se ha instalado correctamente.")
+                    }
+                }
+            }
+        }
+    }
+}
