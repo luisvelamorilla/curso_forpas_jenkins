@@ -14,9 +14,9 @@ pipeline {
                 timeout(time: 10, unit: 'MINUTES')
             }
             steps {
-                def PROGRAM = params.PROGRAM
-                def OPTIONS = params.OPTIONS
                 script {
+                    def PROGRAM = params.PROGRAM
+                    def OPTIONS = params.OPTIONS
                     currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
                 }
             }
