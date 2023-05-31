@@ -25,6 +25,10 @@ pipeline {
                             $PROGRAMS_ARRAY = $ENV:PROGRAMS -split ' '
                             ${PROGRAMS} = $PROGRAMS_ARRAY
                         ''')
+
+                    echo ${ACTION}
+                    echo ${PROGRAMS}
+                    echo ${OPTIONS}
                 }
             }
         }
