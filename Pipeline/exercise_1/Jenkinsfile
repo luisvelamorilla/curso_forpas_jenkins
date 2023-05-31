@@ -59,7 +59,7 @@ pipeline {
                     def ITEMS = PROGRAMS.split(' ')
                     echo "Items: ${ITEMS}"
 
-                    def CHECK = powershell(
+                    powershell(
                         script: '''
                         <#
                             $ITEMS = "$ENV:PROGRAMS" -split ' '
@@ -80,8 +80,7 @@ pipeline {
 
                         ''',
                         returnStdout: true
-                    ).trim()
-                    echo "Resultado: ${CHECK}"   
+                    ).trim() 
                 }
             }
         }
