@@ -53,11 +53,11 @@ pipeline {
 
                     echo "El programa instalado es: ${INSTALLED}"
                     
-                    if (INSTALLED == 0) {
-                        echo "El programa ${PROGRAM} se ha instalado correctamente."
-                    } else {
+                    if (INSTALLED == null || INSTALLED.isEmpty()) {
                         echo "El programa ${PROGRAM} no se ha instalado correctamente."
                         // error "El programa ${PROGRAM} no se ha instalado correctamente."
+                    } else {
+                        echo "El programa ${PROGRAM} se ha instalado correctamente."
                     }
                 }
             }
