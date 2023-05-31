@@ -59,13 +59,14 @@ pipeline {
 
                     echo "La accion a realizar es: ${ACTION}"
                     echo "Los programas son: ${PROGRAMS}"
-                    
+                    /*
                     if (INSTALLED == null || INSTALLED.isEmpty()) {
                         echo "El programa ${PROGRAM} no se ha instalado correctamente."
                         // error "El programa ${PROGRAM} no se ha instalado correctamente."
                     } else {
                         echo "El programa ${PROGRAM} se ha instalado correctamente."
                     }
+                     */
                 }
             }
         }
