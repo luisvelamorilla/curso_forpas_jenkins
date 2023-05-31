@@ -45,7 +45,7 @@ pipeline {
         stage('Verificación') {
             steps {
                 script {        
-                    def INSTALLED_ITEMS = []
+                    def INSTALLED_ITEMS = ['a']
                     def CHECK = powershell(
                         script: '''
                                 ForEach($ITEM in ${INSTALLED_ITEMS}){
