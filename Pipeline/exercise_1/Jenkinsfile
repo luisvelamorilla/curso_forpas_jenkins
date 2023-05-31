@@ -46,6 +46,7 @@ pipeline {
             steps {
                 script {        
                     def ITEMS = System.getenv('PROGRAMS').split(' ')
+                    echo "Items: ${ITEMS}"
                     def CHECK = powershell(
                         script: '''
                                 ForEach($ITEM in ${ITEMS}){
