@@ -56,11 +56,11 @@ pipeline {
                             foreach ($ITEM in $ITEMS) {
                                 $result = choco list --localonly | Select-String -Pattern $ITEM
                                 If($null -eq $result) {
-                                    Write-Host "El programa $ITEM se ha instalado correctamente"
-                                }
-                                Else {
                                     Write-Host -BackgroundColor Red "El programa $ITEM no se ha instalado"
                                     exit 1
+                                }
+                                Else {
+                                    Write-Host "El programa $ITEM se ha instalado correctamente"
                                 }
                             }
                         ''',
