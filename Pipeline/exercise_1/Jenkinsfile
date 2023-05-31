@@ -49,8 +49,10 @@ pipeline {
                     echo "Items: ${ITEMS}"
                     def CHECK = powershell(
                         script: '''
-                                Write-Host "HOLAAAAAAAAAAAAAAAA"
-                                Write-Host ${ITEMS}
+                                ForEach($ITEM in $ENV:{ITEMS}){
+                                    Write-Host $ITEM
+                                    choco list --localonly | Select-String -Pattern ${ITEM}
+                                }
                             ''',
                         returnStdout: true
                     ).trim()
