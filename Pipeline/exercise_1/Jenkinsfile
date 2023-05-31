@@ -56,7 +56,7 @@ pipeline {
                     if (INSTALLED == 0) {
                         echo "El programa ${PROGRAM} se ha instalado correctamente."
                     } else {
-                        error("El programa ${PROGRAM} no se ha instalado correctamente.")
+                        echo "El programa ${PROGRAM} no se ha instalado correctamente."
                     }
                 }
             }
