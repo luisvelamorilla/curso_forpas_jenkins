@@ -42,7 +42,7 @@ pipeline {
             }
         }
   
-        stage('Verificación') {
+        stage('Verificación instalación') {
             when {
                 expression { ACTION == 'install' }
             }
@@ -59,14 +59,14 @@ pipeline {
                                     Write-Host "El programa $ITEM se ha instalado correctamente"
                                 }
                                 Else {
-                                    Write-Error "El programa $ITEM no se ha instalado"
+                                    Write-Host -BackgroundColor Red "El programa $ITEM no se ha instalado"
                                     exit 1
                                 }
                             }
                         ''',
                         returnStdout: true
                     ).trim()
-                    echo "Check: ${CHECK}"
+                    echo "Verificación de la instalación: ${CHECK}"
                 }
             }
         }
