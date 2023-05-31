@@ -31,7 +31,6 @@ pipeline {
             steps {
                 script {        
                     def programsArray = ${PROGRAMS}.split(' ')
-                    echo programsArray
                     }                               
             }
         }
