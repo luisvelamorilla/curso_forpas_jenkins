@@ -30,12 +30,16 @@ pipeline {
         stage('Instalación') {
             steps {
                 script {        
-                    // def programsArray = ${PROGRAMS}.split(' ')
-                    echo "asdasd"
-                    }                               
+                    powershell(
+                        script: '''
+                            $PROGRAMS = $ENV:PROGRAMS -Split ' '
+                            choco $ENV:ACTION $PROGRAMS $ENV:OPTIONS -y
+                        ''',
+                        returnStdout: true
+                    ).trim()    
+                }                               
             }
         }
-    }
 
         /*        
         stage('Verificación') {
@@ -59,4 +63,5 @@ pipeline {
             }
         }
          */
+    }
 }
