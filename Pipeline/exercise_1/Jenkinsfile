@@ -20,13 +20,13 @@ pipeline {
                     def OPTIONS = params.OPTIONS
                     currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
 
-                    echo ${ACTION}
-                    echo ${PROGRAMS}
-                    echo ${OPTIONS}
+                    echo "ACTION: " ${ACTION}
+                    echo "PROGRAMS: " ${PROGRAMS}
+                    echo "OPTIONS: " ${OPTIONS}
                 }
             }
         }
-
+        /*
         stage('Instalación') {
             steps {
                 script {        
@@ -41,7 +41,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Verificación') {
             steps {
                 script {                
