@@ -49,15 +49,13 @@ pipeline {
                     echo "Items: ${ITEMS}"
                     def CHECK = powershell(
                         script: '''
-                                ForEach($ITEM in ${ITEMS}){
-                                    Write-Host $ITEM
-                                    choco list --localonly | Select-String -Pattern ${ITEM}
-                                }
+                                Write-Host "HOLAAAAAAAAAAAAAAAA"
+                                Write-Host ${ITEMS}
                             ''',
                         returnStdout: true
                     ).trim()
                     echo "Check: ${CHECK}"   
-                    
+
                     /*
                     if (INSTALLED == null || INSTALLED.isEmpty()) {
                         echo "El programa ${PROGRAM} no se ha instalado correctamente."
