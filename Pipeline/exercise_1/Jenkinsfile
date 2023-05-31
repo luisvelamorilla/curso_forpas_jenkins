@@ -31,10 +31,23 @@ pipeline {
             steps {
                 script {        
                     // Invocar la función de instalación pasando los parámetros
-                    installPrograms(ACTION, PROGRAMS, OPTIONS)                                   
+                    installPrograms(ACTION, PROGRAMS, OPTIONS)                                 
                 }
             }
         }
+
+
+        // Definir la función de instalación fuera del bloque script
+        def installPrograms(String action, String programs, String options) {
+            def programsArray = programs.split(' ')
+            programsArray.each { program ->
+                def output = powershell(returnStdout: true, script: '''
+                    choco ${action} ${program} ${options} -y
+                ''')
+                echo output.trim()
+            }
+        }
+
         /*        
         stage('Verificación') {
             steps {
