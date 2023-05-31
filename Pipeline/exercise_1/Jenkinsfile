@@ -49,14 +49,15 @@ pipeline {
                     echo "Items: ${ITEMS}"
                     def CHECK = powershell(
                         script: '''
-                                ForEach($ITEM in $ENV:{ITEMS}){
-                                    Write-Host $ITEM
-                                    choco list --localonly | Select-String -Pattern ${ITEM}
-                                }
-                            ''',
+                            $ITEMS = "$env:ITEMS" -split ' '
+                            foreach ($ITEM in $ITEMS) {
+                                Write-Host $ITEM
+                                choco list --localonly | Select-String -Pattern $ITEM
+                            }
+                        ''',
                         returnStdout: true
                     ).trim()
-                    echo "Check: ${CHECK}"   
+                    echo "Check: ${CHECK}"
 
                     /*
                     if (INSTALLED == null || INSTALLED.isEmpty()) {
