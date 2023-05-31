@@ -30,7 +30,7 @@ pipeline {
         stage('Instalación') {
             steps {
                 script {        
-                    def programsArray = programs.split(' ')
+                    def programsArray = ${PROGRAMS}.split(' ')
                     echo programsArray
                     }                               
             }
