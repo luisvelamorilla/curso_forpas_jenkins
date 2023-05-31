@@ -54,21 +54,19 @@ pipeline {
                         script: '''
                             $ITEMS = "$ENV:PROGRAMS" -split ' '
                             foreach ($ITEM in $ITEMS) {
-                                choco list --localonly | Select-String -Pattern $ITEM
+                                $result = choco list --localonly | Select-String -Pattern $ITEM
+                                If($null -eq $result) {
+                                    Write-Host "El programa $ITEM se ha instalado correctamente"
+                                }
+                                Else {
+                                    Write-Error "El programa $ITEM no se ha instalado"
+                                    exit 1
+                                }
                             }
                         ''',
                         returnStdout: true
                     ).trim()
                     echo "Check: ${CHECK}"
-
-                    /*
-                    if (INSTALLED == null || INSTALLED.isEmpty()) {
-                        echo "El programa ${PROGRAM} no se ha instalado correctamente."
-                        // error "El programa ${PROGRAM} no se ha instalado correctamente."
-                    } else {
-                        echo "El programa ${PROGRAM} se ha instalado correctamente."
-                    }
-                     */
                 }
             }
         }
