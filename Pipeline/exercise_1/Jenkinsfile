@@ -57,6 +57,7 @@ pipeline {
                         echo "El programa ${PROGRAM} se ha instalado correctamente."
                     } else {
                         echo "El programa ${PROGRAM} no se ha instalado correctamente."
+                        // error "El programa ${PROGRAM} no se ha instalado correctamente."
                     }
                 }
             }
