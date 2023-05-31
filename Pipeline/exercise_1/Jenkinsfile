@@ -35,8 +35,13 @@ pipeline {
                 script {        
                     def INSTALLING = powershell(
                         script: '''
+                        <#
                             $PROGRAMS = $ENV:PROGRAMS -Split ' '
                             choco $ENV:ACTION $PROGRAMS $ENV:OPTIONS -y --force
+                        #>
+
+                        ./Pipeline/exercise_1/choco_install_uninstall.ps1 $ENV:ACTION $PROGRAMS $ENV:OPTIONS
+                        
                         ''',
                         returnStdout: true
                     ).trim()
