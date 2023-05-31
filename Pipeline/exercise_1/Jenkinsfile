@@ -45,7 +45,7 @@ pipeline {
         stage('Verificación') {
             steps {
                 script {        
-                    def ITEMS = ${PROGRAMS}.split(' ')
+                    def ITEMS = params.PROGRAMS.split(' ')
                     echo "Items: ${ITEMS}"
                     def CHECK = powershell(
                         script: '''
