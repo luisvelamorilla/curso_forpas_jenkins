@@ -30,7 +30,8 @@ pipeline {
         stage('Instalación') {
             steps {
                 script {        
-                    def programsArray = ${PROGRAMS}.split(' ')
+                    // def programsArray = ${PROGRAMS}.split(' ')
+                    echo "asdasd"
                     }                               
             }
         }
