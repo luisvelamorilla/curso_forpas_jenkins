@@ -45,10 +45,10 @@ pipeline {
         stage('Verificación') {
             steps {
                 script {        
-                    def INSTALLED_ITEMS = ['a']
+                    def ITEMS = System.getenv('PROGRAMS').split(' ')
                     def CHECK = powershell(
                         script: '''
-                                ForEach($ITEM in ${INSTALLED_ITEMS}){
+                                ForEach($ITEM in ${ITEMS}){
                                     Write-Host $ITEM
                                     choco list --localonly | Select-String -Pattern ${ITEM}
                                 }
