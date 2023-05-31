@@ -20,35 +20,28 @@ pipeline {
                     def OPTIONS = params.OPTIONS
                     currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
 
-                    powershell(returnStdout: true, 
-                        script: '''
-                            $PROGRAMS_ARRAY = $ENV:PROGRAMS -split ' '
-                            ${PROGRAMS} = $PROGRAMS_ARRAY
-                        ''')
-
                     echo ${ACTION}
                     echo ${PROGRAMS}
                     echo ${OPTIONS}
                 }
             }
         }
-        /*
+
         stage('Instalación') {
             steps {
-                script {               
+                script {        
+                    def PROGRAMS_ARRAY = PROGRAMS.split(' ')       
                     PROGRAMS.each { PROGRAM ->
                         def output = powershell(returnStdout: true, 
                             script: '''
-                                $PROGRAMS_ARRAY = $ENV:PROGRAMS -split ' '
-                                ${PROGRAMS} = $PROGRAMS_ARRAY
-                                choco $ENV:ACTION ${PROGRAM} $ENV:OPTIONS 
+                                choco ${ACTION} ${PROGRAM} ${OPTIONS} -y 
                             ''')
                             echo output.trim()       
                     }                                   
                 }
             }
         }
-        
+        /*
         stage('Verificación') {
             steps {
                 script {                
