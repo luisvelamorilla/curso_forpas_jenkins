@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         }
-        
+        /*
         stage('Instalación') {
             steps {
                 script {               
@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Verificación') {
             steps {
                 script {                
