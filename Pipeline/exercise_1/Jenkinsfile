@@ -17,12 +17,10 @@ pipeline {
                 script {
                     def ACTION = params.ACTION
                     def PROGRAMS = params.PROGRAMS
-                    def OPTIONS = params.OPTIONS
                     currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
 
                     echo "ACTION: " ${ACTION}
                     echo "PROGRAMS: " ${PROGRAMS}
-                    echo "OPTIONS: " ${OPTIONS}
                 }
             }
         }
@@ -34,7 +32,7 @@ pipeline {
                     PROGRAMS.each { PROGRAM ->
                         def output = powershell(returnStdout: true, 
                             script: '''
-                                choco ${ACTION} ${PROGRAM} ${OPTIONS} -y 
+                                choco ${ACTION} ${PROGRAM} -y 
                             ''')
                             echo output.trim()       
                     }                                   
@@ -52,7 +50,6 @@ pipeline {
 
                     echo "La accion a realizar es: ${ACTION}"
                     echo "Los programas son: ${PROGRAMS}"
-                    echo "Las opciones son: ${OPTIONS}"
                     
                     if (INSTALLED == null || INSTALLED.isEmpty()) {
                         echo "El programa ${PROGRAM} no se ha instalado correctamente."
