@@ -30,14 +30,8 @@ pipeline {
         stage('Instalación') {
             steps {
                 script {        
-                    def PROGRAMS_ARRAY = PROGRAMS.split(' ')       
-                    PROGRAMS.each { PROGRAM ->
-                        def output = powershell(returnStdout: true, 
-                            script: '''
-                                choco ${ACTION} ${PROGRAM} ${OPTIONS} -y 
-                            ''')
-                            echo output.trim()       
-                    }                                   
+                    // Invocar la función de instalación pasando los parámetros
+                    installPrograms(ACTION, PROGRAMS, OPTIONS)                                   
                 }
             }
         }
@@ -63,5 +57,15 @@ pipeline {
             }
         }
          */
+    }
+
+    def installPrograms(String action, String programs, String options) {
+        def programsArray = programs.split(' ')
+        programsArray.each { program ->
+            def output = powershell(returnStdout: true, script: '''
+                choco ${action} ${program} ${options} -y
+            ''')
+            echo output.trim()
+        }
     }
 }
