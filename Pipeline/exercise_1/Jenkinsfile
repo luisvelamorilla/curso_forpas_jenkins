@@ -43,6 +43,9 @@ pipeline {
         }
   
         stage('Verificación') {
+            when {
+                expression { ACTION == 'install' }
+            }
             steps {
                 script {        
                     def ITEMS = PROGRAMS.split(' ')
@@ -51,7 +54,6 @@ pipeline {
                         script: '''
                             $ITEMS = "$ENV:PROGRAMS" -split ' '
                             foreach ($ITEM in $ITEMS) {
-                                Write-Host $ITEM
                                 choco list --localonly | Select-String -Pattern $ITEM
                             }
                         ''',
