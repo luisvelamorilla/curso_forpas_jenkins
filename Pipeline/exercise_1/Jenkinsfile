@@ -40,7 +40,7 @@ pipeline {
                             choco $ENV:ACTION $PROGRAMS $ENV:OPTIONS -y --force
                         #>
 
-                        ./Pipeline/exercise_1/choco_install_uninstall.ps1 $ENV:ACTION $PROGRAMS $ENV:OPTIONS
+                        ./Pipeline/exercise_1/choco_install_uninstall.ps1 $ENV:ACTION $ENV:PROGRAMS $ENV:OPTIONS
                         
                         ''',
                         returnStdout: true
