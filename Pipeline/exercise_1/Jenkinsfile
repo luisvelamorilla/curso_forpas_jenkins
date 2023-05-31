@@ -30,13 +30,14 @@ pipeline {
         stage('Instalación') {
             steps {
                 script {        
-                    powershell(
+                    def INSTALLING = powershell(
                         script: '''
                             $PROGRAMS = $ENV:PROGRAMS -Split ' '
                             choco $ENV:ACTION $PROGRAMS $ENV:OPTIONS -y
                         ''',
                         returnStdout: true
-                    ).trim()    
+                    ).trim()
+                    echo "Resultado: ${INSTALLING}"   
                 }                               
             }
         }
