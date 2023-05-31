@@ -27,7 +27,7 @@ pipeline {
                 script {
                     currentBuild.displayName = "${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"                    
                     def output = powershell(returnStdout: true, script: '''
-                            $result = choco install $ENV:PROGRAM $ENV:OPTIONS -y
+                            choco install $ENV:PROGRAM $ENV:OPTIONS -y
                         ''')
                         echo output.trim()                    
                     
