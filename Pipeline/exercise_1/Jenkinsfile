@@ -45,7 +45,7 @@ pipeline {
         stage('Verificación') {
             steps {
                 script {        
-                    def ITEMS = System.getenv('PROGRAMS').split(' ')
+                    def ITEMS = ${PROGRAMS}.split(' ')
                     echo "Items: ${ITEMS}"
                     def CHECK = powershell(
                         script: '''
