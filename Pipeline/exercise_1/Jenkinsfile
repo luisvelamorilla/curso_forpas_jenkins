@@ -41,15 +41,21 @@ pipeline {
                 }                               
             }
         }
-
-        /*        
+  
         stage('Verificación') {
             steps {
-                script {                
-                    def INSTALLED = powershell(
-                        script: "choco list --localonly | Select-String -Pattern ${PROGRAM}",
+                script {        
+                    def INSTALLED_ITEMS = []
+                    def CHECK = powershell(
+                        script: '''
+                                ForEach($item in ${INSTALLED_ITEMS}){
+                                    Write-Host $item
+                                }
+                                choco list --localonly | Select-String -Pattern ${PROGRAM}
+                            ''',
                         returnStdout: true
                     ).trim()
+                    echo "Check: ${CHECK}"   
 
                     echo "La accion a realizar es: ${ACTION}"
                     echo "Los programas son: ${PROGRAMS}"
@@ -63,6 +69,6 @@ pipeline {
                 }
             }
         }
-         */
+
     }
 }
