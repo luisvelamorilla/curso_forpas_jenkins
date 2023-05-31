@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Preparación') {
             options {
-                timeout(time: 10, unit: 'MINUTES')
+                timeout(time: 1, unit: 'MINUTES')
             }
             steps {
                 script {
@@ -28,12 +28,15 @@ pipeline {
         }
 
         stage('Instalación') {
+            options {
+                timeout(time: 10, unit: 'MINUTES')
+            }            
             steps {
                 script {        
                     def INSTALLING = powershell(
                         script: '''
                             $PROGRAMS = $ENV:PROGRAMS -Split ' '
-                            choco $ENV:ACTION $PROGRAMS $ENV:OPTIONS -y
+                            choco $ENV:ACTION $PROGRAMS $ENV:OPTIONS -y --force
                         ''',
                         returnStdout: true
                     ).trim()
@@ -50,6 +53,7 @@ pipeline {
                 script {        
                     def ITEMS = PROGRAMS.split(' ')
                     echo "Items: ${ITEMS}"
+
                     def CHECK = powershell(
                         script: '''
                             $ITEMS = "$ENV:PROGRAMS" -split ' '
@@ -66,7 +70,7 @@ pipeline {
                         ''',
                         returnStdout: true
                     ).trim()
-                    echo "Verificación de la instalación: ${CHECK}"
+                    echo CHECK
                 }
             }
         }
