@@ -48,10 +48,10 @@ pipeline {
                     def INSTALLED_ITEMS = []
                     def CHECK = powershell(
                         script: '''
-                                ForEach($item in ${INSTALLED_ITEMS}){
-                                    Write-Host $item
+                                ForEach($ITEM in ${INSTALLED_ITEMS}){
+                                    Write-Host $ITEM
+                                    choco list --localonly | Select-String -Pattern ${ITEM}
                                 }
-                                choco list --localonly | Select-String -Pattern ${PROGRAM}
                             ''',
                         returnStdout: true
                     ).trim()
