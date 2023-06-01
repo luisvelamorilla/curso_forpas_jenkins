@@ -1,0 +1,36 @@
+// // https://www.jenkins.io/doc/book/pipeline/syntax/
+
+// Nota: crear múltiples BUILD simultáneos
+
+def customBuildName() {
+    currentBuild.displayName = "#${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+}
+
+pipeline {
+    agent {
+        label "linux"
+    }
+    stages {
+        stage('Stage 1') {
+            steps {
+                script {
+                    customBuildName()
+                    // shell script
+                    sh '''
+                        echo "Hello World shell script"
+                    '''
+                    
+                    // powershell script
+                    powershell '''
+                        Write-Host "Hello World powershell script"
+                    '''        
+                    
+                    // python script
+                    sh '''
+                        python print("Hello World")
+                    '''                                        
+                }   
+            }
+        }   
+    }    
+}

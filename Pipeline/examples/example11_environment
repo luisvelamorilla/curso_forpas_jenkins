@@ -1,0 +1,80 @@
+// // https://www.jenkins.io/doc/book/pipeline/syntax/
+
+// Preguntas: 
+// - ¿Se puede modificar el contenido de my_var?
+// - ¿Qué tipo de variables son my_var, result_stage1 y result_stage2?
+// - ¿Qué mensajes post obtenemos en cada stage?
+// - ¿Qué mensajes post obtenemos al final?
+
+def customBuildName() {
+    currentBuild.displayName = "#${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+}
+
+
+pipeline {
+    agent {
+        label "cliente2"
+    }
+
+    environment {
+        my_var = "my_var es una variable global a todos los stages"
+    }
+
+    stages {
+        stage('Stage 1') {
+            agent {
+                label "cliente1"
+            }
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                    def result_stage1 = sh(returnStatus: true, script: 'exit 1') // Aqui se provoca un error
+                    if (result_stage1 == 1) {
+                        currentBuild.result = 'UNSTABLE'
+                    }  
+                    env.result_stage1 = result_stage1                                             
+                }                  
+            }
+            post {    
+                unstable { 
+                    echo 'La ejecución fue inestable'
+                }
+            }               
+        } 
+        stage('Stage 2') {
+            agent {
+                label "cliente2"
+            }
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                    def result_stage2 = sh(returnStatus: true, script: 'exit 2') // Aqui se provoca un error
+                    if (result_stage2 == 2) {
+                        currentBuild.result = 'FAILURE'
+                    }
+                    env.result_stage2 = result_stage2                        
+                }                  
+            } 
+            post {    
+                failure { 
+                    echo 'Algo ha fallado'
+                }
+            }                          
+        }                   
+    }
+    post {    
+        always { 
+            echo "Variable my_var: stage1: ${env:my_var}"        // usa comillas dobles
+            echo "Variable result_stage1:  ${env:result_stage1}" // usa comillas dobles
+            echo "Variable result_stage2:  ${env:result_stage2}" // usa comillas dobles
+        }
+        unstable { 
+            echo 'La ejecución fue inestable'
+        }
+        failure { 
+            echo 'Algo ha fallado'
+        }
+    }          
+}

@@ -1,0 +1,57 @@
+// https://www.jenkins.io/doc/book/pipeline/syntax/
+
+def customBuildName() {
+    currentBuild.displayName = "#${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+}
+
+pipeline {
+    agent {
+        label "cliente2"
+    }
+    parameters {
+        choice(name: 'ACTION', choices: ['install', 'remove'], description: '¿Quieres instalar o desinstalar?')
+        string(name: 'PROGRAM', defaultValue: 'nginx', description: 'Indica el programa que quieres instalar')
+    }
+    stages {
+        stage('Stage 1') {
+            steps {
+                echo "Action: ${params.ACTION}"
+                echo "Program: ${params.PROGRAM}"
+                script {
+                    customBuildName()
+                    env.action_result = sh(script: 'sudo apt ${ACTION} ${PROGRAM} -y', returnStdout: true).trim()
+                    env.check_result = sh(script: '''
+                            if dpkg -s ${PROGRAM} | grep -q "Status: install ok installed"; then
+                                echo "El programa ${PROGRAM} está instalado"
+                            else
+                                echo "El programa ${PROGRAM} no está instalado"
+                            fi
+                        ''', returnStdout: true).trim()     
+                }    
+            }
+            post {    
+                always { 
+                    echo "Resultado de la acción: ${env:action_result}" // usa comillas dobles
+                    echo "Check: ${env:check_result}" // usa comillas dobles
+                }
+            }               
+        }
+        stage('Remove step') {
+            agent {
+                label "linux"
+            }
+            when {
+                expression { params.ACTION == "remove" }
+            }
+            steps {
+                script {
+                    customBuildName()
+                    sh '''
+                        sudo apt autoremove -y
+                        sudo apt purge
+                    '''
+                }                   
+            }
+        }
+    }
+}

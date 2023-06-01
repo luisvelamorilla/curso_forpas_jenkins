@@ -1,0 +1,73 @@
+// // https://www.jenkins.io/doc/book/pipeline/syntax/
+
+// Notas:
+// - define un error en el Stage 1 que marque ese stage como inestable
+// - define un error en el Stage 2 que marque ese stage como failure
+
+// Preguntas: 
+// - ¿Qué mensajes post obtenemos en cada stage?
+// - ¿Qué mensajes post obtenemos al final?
+
+def customBuildName() {
+    currentBuild.displayName = "#${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+}
+
+
+pipeline {
+    agent {
+        label "cliente2"
+    }
+    stages {
+        stage('Stage 1') {
+            agent {
+                label "cliente1"
+            }
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                    def result = sh(returnStatus: true, script: 'exit 1') // Aqui se provoca un error
+                    if (result == 1) {
+                        currentBuild.result = 'UNSTABLE'
+                    }                        
+                }                  
+            }
+            post {    
+                unstable { 
+                    echo 'La ejecución fue inestable'
+                }
+            }               
+        } 
+        stage('Stage 2') {
+            agent {
+                label "cliente2"
+            }
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                    def result = sh(returnStatus: true, script: 'exit 2') // Aqui se provoca un error
+                    if (result == 2) {
+                        currentBuild.result = 'FAILURE'
+                    }                        
+                }                  
+            } 
+            post {    
+                failure { 
+                    echo 'Algo ha fallado'
+                }
+            }                          
+        }                   
+    }
+    post {    
+        always { 
+            echo 'Este mensaje se muestra siempre'
+        }
+        unstable { 
+            echo 'La ejecución fue inestable'
+        }
+        failure { 
+            echo 'Algo ha fallado'
+        }
+    }          
+}

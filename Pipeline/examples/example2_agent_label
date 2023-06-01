@@ -1,0 +1,24 @@
+// https://www.jenkins.io/doc/book/pipeline/syntax/
+
+// Preguntas: 
+// - ¿Dónde se ejecuta el pipeline?
+// - ¿Dónde se ejecuta cada stage?
+// - ¿Son concurrentes?
+
+pipeline {
+    agent {
+        label "cliente2"
+    }
+    stages {
+        stage('Stage 1') {
+            steps {
+                echo 'Hello stage 1'
+            }
+        }
+        stage('Stage 2') {
+            steps {
+                echo 'Hello stage 2'
+            }
+        }      
+    }
+}

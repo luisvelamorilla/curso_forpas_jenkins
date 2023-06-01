@@ -1,23 +1,4 @@
-pipeline {
-
-    // agent any
-    
-    // dedicated node to execute this admin tasks
-    agent {
-        label "cliente2"
-    }    
-
-    stages {
-        stage('Stage1') {
-            steps {
-                script {
-                    parallelTasks()
-                }
-            }
-        }
-    }
-}
-
+// https://www.jenkins.io/doc/book/pipeline/syntax/
 
 def parallelTasks() {
     def labels = ['cliente1', 'cliente2'] 
@@ -39,4 +20,19 @@ def parallelTasks() {
         }
     }
     parallel builders
+}
+
+pipeline {
+    agent {
+        label "cliente2"
+    }    
+    stages {
+        stage('Stage1') {
+            steps {
+                script {
+                    parallelTasks()
+                }
+            }
+        }
+    }
 }

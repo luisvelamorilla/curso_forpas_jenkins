@@ -1,26 +1,6 @@
+// https://www.jenkins.io/doc/book/pipeline/syntax/
+
 import jenkins.model.*
-
-pipeline {
-    // dedicated node to execute this admin tasks
-    agent {
-        label "cliente2"
-    }
-
-        
-    stages {
-        stage('Parallel-stage') {
-            
-            steps {
-                script {
-                    processTask()
-      
-                    parallel collectBuildEnv
-                }
-            }
-        }
-    }
-}
-
 
 collectBuildEnv = [:] // empty map
 
@@ -47,15 +27,35 @@ def dumpBuildEnv(String agentName) {
 
 
 def processTask() {
-    def nodeList = getNodes("linux")
+    def nodeList = getNodes(env['concurrent_nodes'])
     
     for(i=0; i<nodeList.size(); i++) {
         def agentName = nodeList[i]
         
         if (agentName != null) {
-            println "Preparing task for " + agentName
+            println "Preparing node block for " + agentName
             collectBuildEnv["node_" + agentName] = {
                 dumpBuildEnv(agentName)
+            }
+        }
+    }
+}
+
+pipeline {
+    agent {
+        label "cliente2"
+    }
+    environment {
+        concurrent_nodes = "linux"
+    }      
+    stages {
+        stage('Stage paralelo') {
+            
+            steps {
+                script {
+                    processTask()
+                    parallel collectBuildEnv
+                }
             }
         }
     }

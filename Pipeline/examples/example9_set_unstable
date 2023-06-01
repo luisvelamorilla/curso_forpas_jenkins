@@ -1,0 +1,40 @@
+// // https://www.jenkins.io/doc/book/pipeline/syntax/
+
+// Nota: fuerza un error en el Stage 1
+
+// Preguntas: 
+// - ¿Qué mensajes post obtenemos?
+
+def customBuildName() {
+    currentBuild.displayName = "#${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+}
+
+
+pipeline {
+    agent {
+        label "cliente2"
+    }
+    stages {
+        stage('Stage 1') {
+            agent {
+                label "linux"
+            }
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                    def result = sh(returnStatus: true, script: 'ASDASDASDASDASDADASDSDSSAS') // Aqui se provoca un error
+                    if (result != 0) {
+                        currentBuild.result = 'UNSTABLE'
+                    }                        
+                }   
+                echo 'Hello stage 1'                
+            }
+            post { 
+                unstable { 
+                    echo 'La ejecución fue inestable'
+                }
+            }              
+        }            
+    }      
+}

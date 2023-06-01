@@ -1,0 +1,38 @@
+// // https://www.jenkins.io/doc/book/pipeline/syntax/
+
+// Nota: crear múltiples BUILD simultáneos
+
+// Preguntas: 
+// - ¿Dónde se ejecuta el pipeline?
+// - ¿Dónde se ejecuta cada stage?
+// - ¿Son concurrentes?
+
+def customBuildName() {
+    currentBuild.displayName = "#${BUILD_ID} - ${JOB_NAME} - ${NODE_NAME}"
+}
+
+pipeline {
+    agent {
+        label "linux"
+    }
+    stages {
+        stage('Stage 1') {
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                }   
+                echo 'Hello stage 1'
+            }
+        }
+        stage('Stage 2') {  
+            steps {
+                script {
+                    customBuildName()
+                    sh 'hostname'
+                }                   
+                echo 'Hello stage 2'
+            }
+        }      
+    }    
+}
